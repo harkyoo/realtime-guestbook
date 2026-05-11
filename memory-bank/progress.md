@@ -2,7 +2,7 @@
 
 ## Current Status
 
-Initial Next.js/Supabase implementation is in place. The app includes a creation page, sticky-note wall, detail modal, comments, realtime subscriptions, Supabase schema, environment documentation, and warm responsive styling.
+Initial Next.js/Supabase implementation is in place and has been verified against a live Supabase project. The app includes a creation page, sticky-note wall, detail modal, comments, realtime subscriptions, Supabase schema, environment documentation, and warm responsive styling. Local dependencies are installed, the local environment is configured, the schema is applied, and the local app is running successfully.
 
 ## Completed
 
@@ -21,10 +21,18 @@ Initial Next.js/Supabase implementation is in place. The app includes a creation
 - Added Supabase Realtime subscriptions for new entries and entry-specific comments
 - Added SQL schema, RLS policies, storage bucket setup, indexes, and comment-count view
 - Added README and `.env.example`
+- Started the local Next.js dev server successfully
+- Verified the local app responds on `http://localhost:3000`
+- Verified `.env.local` now contains non-placeholder Supabase values
+- Normalized the Supabase URL in `.env.local` to the project base URL format
+- Verified `supabase/schema.sql` is applied in the connected Supabase project
+- Verified the wall reads live data from Supabase successfully
+- Verified the application runs locally with the configured Supabase backend
+- Verified `npm run typecheck`, `npm run lint`, and `npm run build` all succeed locally
 
 ## In Progress
 
-- Verification in this environment is limited because npm registry access for scoped packages returned `403 Forbidden` during dependency installation.
+- Preparing final repository updates for push
 
 ## Not Started
 
@@ -39,16 +47,15 @@ Initial Next.js/Supabase implementation is in place. The app includes a creation
 - Supabase Realtime must be enabled for `public.guestbook_entries` and `public.comments` in the Supabase project dashboard.
 - Public anonymous insert policies are intentionally simple for event usage but should be revisited before open internet deployments.
 - Canvas export and upload flow needs device testing on real iOS/Android browsers.
-- Dependency installation could not be completed in the current environment due to npm registry policy restrictions for scoped packages.
+- The current environment does not have the `supabase` CLI installed, so dashboard-side setup cannot be automated from this shell alone.
+- Test data inserted during verification cannot be deleted through the public anon key because the schema intentionally does not grant `DELETE` privileges to anonymous clients.
 
 ## Next Recommended Milestones
 
-1. Install dependencies in an environment with access to npm scoped packages.
-2. Run `npm run typecheck`, `npm run lint`, and `npm run build`.
-3. Create a Supabase project and execute `supabase/schema.sql`.
-4. Enable Supabase Realtime for the two application tables.
-5. Test entry creation, wall updates, detail modal comments, and realtime behavior with two browsers.
-6. Deploy to Vercel and configure production environment variables.
+1. Remove verification-only guestbook records through the Supabase dashboard or SQL editor if a clean demo dataset is desired.
+2. Decide whether anonymous deletion should stay disallowed in production.
+3. Deploy to Vercel and configure production environment variables.
+4. Add image optimization, moderation, or multi-room support as follow-up product work.
 
 ## Notes for Future Updates
 
