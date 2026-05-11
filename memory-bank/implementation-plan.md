@@ -6,142 +6,124 @@ Build a Next.js-based real-time digital guestbook where users can submit a nickn
 
 ## Delivery Approach
 
-Use an iterative build sequence that gets the core loop working first:
+The first implementation pass has produced a complete deployable scaffold with Supabase as the backend. Remaining work focuses on environment-backed verification, deployment, and production hardening.
 
-1. project foundation
-2. data model and Supabase integration
-3. entry creation flow
-4. wall browsing experience
-5. detail and comments
-6. realtime synchronization
-7. UX polish and deployment readiness
-
-## Phase 1: Foundation
-
-- Initialize a Next.js app with App Router, TypeScript, and Tailwind CSS
-- Establish folder structure for app routes, components, lib helpers, and types
-- Add environment variable handling for Supabase
-- Create shared validation schemas and constants
-
-### Suggested initial structure
+## Implemented Folder Structure
 
 ```text
 .
-├── AGENTS.md
-├── memory-bank/
-│   ├── architecture.md
-│   ├── implementation-plan.md
-│   └── progress.md
 ├── app/
+│   ├── actions.ts
+│   ├── globals.css
+│   ├── layout.tsx
 │   ├── page.tsx
-│   ├── wall/page.tsx
-│   └── globals.css
+│   └── wall/page.tsx
 ├── components/
-│   ├── guestbook/
-│   ├── wall/
-│   └── comments/
+│   ├── comments/CommentForm.tsx
+│   ├── guestbook/DrawingCanvas.tsx
+│   ├── guestbook/GuestbookForm.tsx
+│   └── wall/
+│       ├── EntryDetailModal.tsx
+│       ├── StickyNoteCard.tsx
+│       └── StickyNoteGrid.tsx
 ├── lib/
 │   ├── supabase/
-│   ├── validation/
-│   └── utils/
-├── types/
-└── public/
+│   │   ├── client.ts
+│   │   ├── config.ts
+│   │   ├── media.ts
+│   │   └── server.ts
+│   ├── utils/
+│   │   ├── cn.ts
+│   │   └── date.ts
+│   └── validation/guestbook.ts
+├── supabase/schema.sql
+├── types/database.ts
+├── memory-bank/
+└── README.md
 ```
 
-## Phase 2: Supabase Setup
+## Phase 1: Foundation — Completed
 
-- Create Supabase project
-- Create `guestbook_entries` and `comments` tables
-- Create storage bucket for media assets
-- Enable realtime for relevant tables
-- Define row-level security strategy
+- Initialized a Next.js App Router project structure with TypeScript and Tailwind CSS.
+- Added scripts for development, build, lint, and type checking.
+- Added README and `.env.example`.
+- Added reusable types, validation constants, and utility helpers.
 
-### Initial DB tasks
+## Phase 2: Supabase Setup — Repository Artifacts Completed
 
-- Add primary keys and timestamps
-- Add foreign key from comments to guestbook entries
-- Add indexes for `created_at` and `entry_id`
-- Decide on public vs private storage bucket policy
+- Added `supabase/schema.sql` with:
+  - `guestbook_entries` table
+  - `comments` table
+  - indexes
+  - `entries_with_comment_counts` view
+  - RLS read/insert policies
+  - public `guestbook-media` storage bucket and policies
+- Added Supabase browser and server client helpers.
 
-## Phase 3: Entry Creation Experience
+### External Setup Still Required
 
-- Build a creation-first landing page
-- Add nickname and message fields
-- Add image upload control
-- Add drawing canvas with basic tools:
-  - pen
-  - color selection
-  - clear
-- Export drawing to image on submit
-- Validate that at least one visual asset exists
-- Upload image blob to storage and persist entry record
+- Create a real Supabase project.
+- Apply `supabase/schema.sql`.
+- Enable Realtime for `guestbook_entries` and `comments`.
+- Configure local and production environment variables.
 
-## Phase 4: Sticky-Note Wall
+## Phase 3: Entry Creation Experience — Completed
 
-- Build responsive wall page
-- Load latest entries ordered by newest first
-- Render entries as sticky-note cards with:
-  - nickname
-  - short message preview
-  - image thumbnail
-  - comment count
-- Add empty state for no entries
-- Add loading skeletons or pending state
+- Built a creation-first landing page.
+- Added nickname and message fields.
+- Added photo upload field with type/size validation in the server action.
+- Added custom drawing canvas with color choices, touch input, and clear control.
+- Exported drawings as PNG files for the same storage path as uploaded images.
+- Enforced the photo-or-drawing requirement.
 
-## Phase 5: Detail and Comments
+## Phase 4: Sticky-Note Wall — Completed
 
-- Add modal or route-based detail view
-- Show full-size image or drawing
-- Show full message and nickname
-- Query and render comments
-- Add comment composer with nickname and message
-- Submit comments with optimistic or near-real-time feedback
+- Built a responsive cork-board wall page.
+- Loaded latest entries ordered newest first through `entries_with_comment_counts`.
+- Rendered entries as colorful sticky-note cards with bounded rotations.
+- Added empty, missing-environment, and realtime-error states.
 
-## Phase 6: Realtime Synchronization
+## Phase 5: Detail and Comments — Completed
 
-- Subscribe wall view to new guestbook entries
-- Subscribe detail view to comments for selected entry
-- Merge incoming records into existing client state
-- Prevent duplicate insertion when optimistic updates and realtime events overlap
+- Added a modal detail view for clicked sticky notes.
+- Displayed original media, author, message, relative time, and comments.
+- Added nickname-based comment composer.
+- Added server action for comment validation and insert.
 
-## Phase 7: UI and Product Polish
+## Phase 6: Realtime Synchronization — Completed
 
-- Refine sticky-note visuals and board layout
-- Ensure strong mobile usability for drawing and posting
-- Add error toasts or inline validation
-- Add graceful loading and failure handling
-- Check text overflow, thumbnail cropping, and modal ergonomics
+- Subscribed the wall to inserted guestbook entries.
+- Subscribed the detail modal to inserted comments filtered by selected entry.
+- Added duplicate protection when merging realtime rows.
+- Updated local comment counts when comments arrive in the active detail modal.
 
-## Technical Decisions to Prefer
+## Phase 7: UI and Product Polish — Initial Pass Completed
 
-- Prefer Supabase over custom WebSocket backend for faster delivery and lower operational overhead
-- Prefer server-side initial fetch plus client-side realtime hydration
-- Prefer storing drawings as image files rather than raw JSON stroke data for simpler rendering in the wall and detail views
+- Added warm paper, blush, and cork textures.
+- Used large rounded controls for mobile ergonomics.
+- Added loading, error, empty, and success feedback states.
+- Added direct navigation between creation and wall pages.
 
-## Validation Checklist
+## Verification Plan
 
-- User can create an entry with uploaded photo
-- User can create an entry with canvas drawing
-- Entry appears on wall without manual refresh
-- User can open a sticky note and read details
-- User can add a comment
-- Comment appears without manual refresh
-- Mobile layout remains usable on creation page and wall page
+Run these after dependency installation succeeds:
 
-## Stretch Ideas
+1. `npm run typecheck`
+2. `npm run lint`
+3. `npm run build`
+4. Manual browser test with two sessions:
+   - submit a photo entry
+   - submit a drawing entry
+   - verify both appear on `/wall` without refresh
+   - open a detail modal and add comments
+   - verify comments appear in the other browser without refresh
 
-- Reaction badges on entries
-- Randomized but bounded sticky-note rotation
-- Guestbook filtering or search
-- Event-specific rooms or shareable invite links
-- Moderation tools or profanity filtering
-- Local nickname persistence for convenience
+## Extension Ideas
 
-## Documentation Rule
-
-Before and during implementation, always consult and update:
-
-- `AGENTS.md`
-- `memory-bank/architecture.md`
-- `memory-bank/progress.md`
-- `memory-bank/implementation-plan.md`
+- Reaction badges on entries.
+- Randomized but bounded sticky-note rotations seeded by entry ID.
+- Guestbook filtering or search.
+- Event-specific rooms or shareable invite links.
+- Moderation queue, profanity filtering, or admin dashboard.
+- Local nickname persistence for convenience.
+- Server-side image resizing and thumbnail generation.

@@ -2,48 +2,53 @@
 
 ## Current Status
 
-Project setup is at the documentation and planning stage. No application code has been implemented yet.
+Initial Next.js/Supabase implementation is in place. The app includes a creation page, sticky-note wall, detail modal, comments, realtime subscriptions, Supabase schema, environment documentation, and warm responsive styling.
 
 ## Completed
 
 - Captured the product brief for the real-time guestbook experience
 - Defined the memory-bank documentation structure
 - Added repository-level guidance in `AGENTS.md`
-- Drafted initial architecture direction
-- Drafted implementation roadmap
+- Drafted and updated architecture direction
+- Drafted and updated implementation roadmap
+- Scaffolded a Next.js App Router project with TypeScript and Tailwind CSS
+- Added Supabase client/server helpers and environment variable handling
+- Added shared TypeScript data types and validation schemas
+- Implemented entry creation with nickname, message, photo upload, and canvas drawing export
+- Implemented server actions for media upload, entry insert, and comment insert
+- Implemented responsive sticky-note wall UI
+- Implemented entry detail modal with full media preview and comments
+- Added Supabase Realtime subscriptions for new entries and entry-specific comments
+- Added SQL schema, RLS policies, storage bucket setup, indexes, and comment-count view
+- Added README and `.env.example`
 
 ## In Progress
 
-- Converting the product brief into an implementation-ready plan
+- Verification in this environment is limited because npm registry access for scoped packages returned `403 Forbidden` during dependency installation.
 
 ## Not Started
 
-- Next.js application bootstrap
-- Supabase project setup and environment configuration
-- Database schema and storage bucket creation
-- Creation page UI
-- Sticky-note wall UI
-- Detail modal or route
-- Comment system
-- Realtime subscriptions
-- Loading, error, and empty states
-- Deployment configuration
+- Actual Supabase project provisioning outside the repository
+- Production deployment configuration in Vercel or another host
+- Image thumbnail generation / optimization pipeline
+- Moderation and spam controls
+- Event room/multi-board support
 
 ## Risks / Watchpoints
 
-- Realtime behavior can become noisy if subscription scope is too broad
-- Canvas export and upload flow needs careful handling on mobile devices
-- Sticky-note layout should remain readable even with variable image aspect ratios
-- Anonymous participation increases moderation and spam considerations later
+- Supabase Realtime must be enabled for `public.guestbook_entries` and `public.comments` in the Supabase project dashboard.
+- Public anonymous insert policies are intentionally simple for event usage but should be revisited before open internet deployments.
+- Canvas export and upload flow needs device testing on real iOS/Android browsers.
+- Dependency installation could not be completed in the current environment due to npm registry policy restrictions for scoped packages.
 
 ## Next Recommended Milestones
 
-1. Scaffold the Next.js app with TypeScript and Tailwind CSS
-2. Set up Supabase project, tables, storage bucket, and local env variables
-3. Implement entry creation flow with upload and drawing support
-4. Build sticky-note wall and detail experience
-5. Add realtime syncing for entries and comments
-6. Polish responsive UI states and prepare deployment
+1. Install dependencies in an environment with access to npm scoped packages.
+2. Run `npm run typecheck`, `npm run lint`, and `npm run build`.
+3. Create a Supabase project and execute `supabase/schema.sql`.
+4. Enable Supabase Realtime for the two application tables.
+5. Test entry creation, wall updates, detail modal comments, and realtime behavior with two browsers.
+6. Deploy to Vercel and configure production environment variables.
 
 ## Notes for Future Updates
 
