@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255, 234, 188, 0.7), transparent 28rem),
+    radial-gradient(circle at 90% 0%, rgba(255, 218, 204, 0.9), transparent 24rem),
+    linear-gradient(180deg, #fffaf0 0%, #fff7df 48%, #ffeeda 100%);
+}
+
+.board-texture {
+  background-color: #d49a64;
+  background-image:
+    radial-gradient(rgba(92, 55, 30, 0.15) 1px, transparent 1px),
+    linear-gradient(120deg, rgba(255, 255, 255, 0.16), transparent 50%, rgba(80, 42, 21, 0.12));
+  background-size: 18px 18px, 100% 100%;
+}
+
+.canvas-grid {
+  background-image:
+    linear-gradient(rgba(140, 107, 75, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 107, 75, 0.08) 1px, transparent 1px);
+  background-size: 22px 22px;
+}
